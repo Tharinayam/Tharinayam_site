@@ -4,19 +4,11 @@ import {
   Menu, 
   X, 
   Sparkles, 
-  Store, 
-  Search, 
-  Compass, 
-  ChevronRight,
-  ShieldCheck
+  Store
 } from 'lucide-react';
-import { SAREES_DATA } from '../data/sarees';
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
-  const [showSearchDropdown, setShowSearchDropdown] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
   const location = useLocation();
@@ -28,24 +20,6 @@ export default function Navbar() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  const handleSearch = (e) => {
-    const q = e.target.value;
-    setSearchQuery(q);
-    if (q.trim().length > 1) {
-      const filtered = SAREES_DATA.filter((s) => 
-        s.title.toLowerCase().includes(q.toLowerCase()) ||
-        s.originHub.toLowerCase().includes(q.toLowerCase()) ||
-        s.fabric.toLowerCase().includes(q.toLowerCase()) ||
-        s.category.toLowerCase().includes(q.toLowerCase())
-      ).slice(0, 5);
-      setSearchResults(filtered);
-      setShowSearchDropdown(true);
-    } else {
-      setSearchResults([]);
-      setShowSearchDropdown(false);
-    }
-  };
 
   const navLinks = [
     { name: 'Home', path: '/' },
@@ -134,50 +108,6 @@ export default function Navbar() {
               </div>
             </Link>
 
-            {/* Search Bar - Sleek Luxury Capsule */}
-            <div className="relative flex-1 max-w-xs hidden xl:block">
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Search Kanchipuram, Sungudi..."
-                  value={searchQuery}
-                  onChange={handleSearch}
-                  onFocus={() => searchQuery.trim() && setShowSearchDropdown(true)}
-                  className="w-full pl-9 pr-4 py-2 text-xs rounded-full bg-stone-100/90 border border-stone-200 focus:border-heritage-gold focus:bg-white focus:outline-none transition-all shadow-inner"
-                />
-                <Search className="w-3.5 h-3.5 text-stone-400 absolute left-3.5 top-2.5" />
-              </div>
-
-              {/* Live Search Instant Dropdown */}
-              {showSearchDropdown && searchResults.length > 0 && (
-                <div 
-                  className="absolute left-0 right-0 top-full mt-2 bg-white rounded-2xl shadow-2xl border border-stone-200 overflow-hidden z-50 divide-y divide-stone-100 text-xs animate-slideUpFade"
-                  onMouseLeave={() => setShowSearchDropdown(false)}
-                >
-                  <div className="p-2.5 text-[10px] font-bold text-stone-400 uppercase tracking-widest bg-stone-50">
-                    Matching Weaves & Sarees
-                  </div>
-                  {searchResults.map((saree) => (
-                    <Link
-                      key={saree.id}
-                      to={`/collections?hub=${saree.originHub}`}
-                      onClick={() => setShowSearchDropdown(false)}
-                      className="flex items-center gap-3 p-3 hover:bg-amber-50/60 transition-colors"
-                    >
-                      <img 
-                        src={saree.images[0]} 
-                        alt={saree.title} 
-                        className="w-10 h-10 object-cover rounded-lg border border-stone-200"
-                      />
-                      <div className="flex-1 min-w-0">
-                        <p className="font-medium text-stone-800 truncate">{saree.title}</p>
-                        <p className="text-[11px] text-stone-500">{saree.originHub} • {saree.fabric}</p>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
 
             {/* Desktop Navigation Links */}
             <nav className="hidden lg:flex items-center gap-1 xl:gap-1.5">
